@@ -2,18 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/webstorm-icon-logo.svg" />
+  <link rel="icon" type="image/svg+xml" href="/finvest_logo.png" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WS playground</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="public/style.css">
+  <script src="src/main.js"></script>
 </head>
+
 <body>
-<h1>Welcome to Tracker</h1>
+
+<h1>Welcome to Finvest</h1>
+
 <header class="logo">
   <nav class="main_nav_btn">
-    <button>Home</button>
-    <button>Portfolio</button>
+    <button><a href="index.html">Home</a>></button>
+    <button><a href="portfolio.html">My Portfolio</a></button>
     <button>Login</button>
     <button>Sign Up</button>
   </nav>
@@ -21,21 +25,22 @@
 
 <main id="app">
 
-
 </main>
-
-<div id="import-form-overlay" style="display: none;">
-  <form id="investment-form" action="">
-    <input type="text" placeholder="Stock or crypto name"/>
-    <input type="number" value="Velkost nakupu">
-    <input type="number" value="Cena akcie v case nakupu">
-    <button id="import-stock" type="submit">Import Stock</button>
-  </form>
+<div id="import-form-overlay" style="display: none">
+<form id="investment-form">
+  <button id="close-form" type="button">X</button>
+  <input id="name" type="text" placeholder="Stock name"/>
+  <input id="price" type="number" placeholder="Price of stock"/>
+  <input id="size" type="number" placeholder="Size of investment"/>
+  <button id="import-data" type="submit">Import</button>
+</form>
 </div>
+
+
 
 <footer class="technologies">
   <button id="form-button"><i class="bi bi-file-earmark-plus"></i></button>
 </footer>
-<script type="module" src="/frontend/src/main.js"></script>
+<script type="module" src="src/main.js"></script>
 </body>
 </html>
