@@ -13,10 +13,6 @@ app.use(cors());
 // Keď prehliadač požiada o súbor, Express ho bude hľadať v adresári 'frontend'
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Pripojenie auth routes
-// Všetky cesty definované v authRoutes budú dostupné (napr. /login, /signup)
-app.use(authRoutes);
-
 // Konfigurácia databázy
 const pool = new Pool({
     user: 'postgres',
@@ -36,3 +32,8 @@ app.post('/api/save', async (req, res) => {
 
 // Spustenie servera
 app.listen(3000, () => console.log('Server started on port 3000'));
+
+app.get('/',(req, res)=>res.render('index.html'))
+// Pripojenie auth routes
+// Všetky cesty definované v authRoutes budú dostupné (napr. /login, /signup)
+app.use(authRoutes);
