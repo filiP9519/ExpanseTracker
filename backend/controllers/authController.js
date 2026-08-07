@@ -3,7 +3,15 @@ const User = require('../models/user');
 
 //handle errors
 const handleErrors = (err) => {
+    console.log(err.message, err.code);
+    let errors = {email: '', password: '', username: ''};
 
+    if (err.code === '23505'){
+        if (err.constraint && err.constraint.includes('email')){
+            errors.email = 'That email is already registered';
+
+        }
+    }  return errors;//console.log(err.message, err.code);
 }
 module.exports.signup_get = (req, res) => {
    // res.render('signup');
@@ -16,28 +24,23 @@ module.exports.login_get = (req, res) => {
 
 module.exports.signup_post = async (req, res) => {
     const {email, password, username} = req.body;
-
-    if (!email || email.trim() === ''){
-        return res.status(400).json({error: 'Email is required!'});
+    if (!password || password.trim() === '') {
+        return res.status(400).json({ error: 'Password cannot be empty!' });
     }
-    if (!password || password.length < 6){
-        return res.status(400).json({error: 'Password must be at least 6 characters long'});
+    if(password.length < 8){
+        return res.status(400).json({ error: 'Password cannot be shorter than 8 characters.'})
     }
-    if (!username || username.trim() === ''){
-        return res.status(400).json({error: 'Username is required!'});
+    if (!username || username.trim() === '') {
+        return res.status(400).json({ error: 'Username cannot be empty!' });
     }
     try {
         const user = await User.create(email, password, username);
         res.status(201).json({user})
     } catch (error) {
-        handleErrors(error);
-        /*
-    if (error.code === '23505'){
-        return res.status(400).json({error: 'Username already exists!'});
-    }
+        const errors = handleErrors(error);
 
-    res.status(400).json({error: error.message});
-    */
+        res.status(400).json({error: errors});
+
     }
 }
 

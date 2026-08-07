@@ -16,6 +16,28 @@
     text-align: center;
 }
 
+form.reg_log_form{
+    width: 360px;
+    margin:0 auto;
+    padding: 30px;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: white;
+}
+
+input.reg_log_form{
+    padding: 10px 12px;
+    border-radius: 4px;
+    border : 1px solid #ddd;
+    font-size: 1em;
+    width: 100%;
+}
+
+label.reg_log_form{
+    display: block;
+
+}
+
 body {
     margin: 0;
     display: flex;
@@ -24,8 +46,11 @@ body {
     min-width: 320px;
     min-height: 100vh;
     align-items: center;
+}
 
-
+/* This new rule will only apply to the signup page */
+body.signup-page {
+    justify-content: center;
 }
 
 /*

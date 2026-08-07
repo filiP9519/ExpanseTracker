@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -11,8 +12,13 @@ const pool = new Pool({
 //(ekvivalent User.create())
 const User = {
     async create(email, password, username){
+
+        //zasifrovanie hesla
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        
         const query = 'INSERT INTO users(email,password,username) VALUES ($1,$2,$3) RETURNING *';
-        const values = [email, password, username];
+        const values = [email, hashedPassword, username];
         const result = await pool.query(query, values);
         return result.rows[0]; // Vráti vytvoreného používateľa
     },
