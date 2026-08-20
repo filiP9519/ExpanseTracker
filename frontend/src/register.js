@@ -9,7 +9,7 @@ document.getElementById('signup_form').addEventListener('submit', async (e) => {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/api/signup', {
+    const response = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -19,6 +19,7 @@ document.getElementById('signup_form').addEventListener('submit', async (e) => {
 
     if (response.ok) {
       alert('Sign up successfully');
+      console.log('Created data: ', data.user.user_id);
     } else {
       alert(
         'Sign up failed during registration: ' +
@@ -26,7 +27,7 @@ document.getElementById('signup_form').addEventListener('submit', async (e) => {
       );
     }
   } catch (error) {
-    console.error('Error pri signUpe: ', error);
+    console.error('Error during signUp: ', error);
   }
 });
 //-------------------------- END OF SIGN UP FORM --------------------------
