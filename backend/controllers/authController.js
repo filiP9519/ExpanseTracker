@@ -6,12 +6,17 @@ const handleErrors = (err) => {
     console.log(err.message, err.code);
     let errors = {email: '', password: '', username: ''};
 
+    if (err.message == '')
     if (err.code === '23505'){
         if (err.constraint && err.constraint.includes('email')){
             errors.email = 'That email is already registered';
 
         }
-    }  return errors;//console.log(err.message, err.code);
+    }
+    if (err.message === 'user already exists'){
+        errors.username = 'Username is already registered';
+    }
+    return errors;//console.log(err.message, err.code);
 }
 
 const maxAge = 86400000
@@ -60,8 +65,8 @@ module.exports.login_post = async (req, res) => {
     const{username, password} = req.body;
     try{
         const user = await User.login(username, password);
-        res.status(201).json({user})
-    } catch (error) {
-        console.log(error);
+        res.status(201).json({user : user.user_id});
+    } catch (e){
+        res.status(400).json({});
     }
 }

@@ -1,4 +1,8 @@
 //-------------------------- SIGN UP FORM --------------------------
+const emailError = document.querySelector('.email_error_message');
+const passwordError = document.querySelector('.password_error_message');
+const usernameError = document.querySelector('.username_error_message');
+
 document.getElementById('signup_form').addEventListener('submit', async (e) => {
   e.preventDefault(); //stops refresh of website
 
@@ -8,31 +12,31 @@ document.getElementById('signup_form').addEventListener('submit', async (e) => {
     password: document.getElementById('password_signup').value,
   };
 
+  emailError.textContent = '';
+  usernameError.textContent = '';
+  passwordError.textContent = '';
+
+
   try {
     const response = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
+    const data = await response.json();
 
-      const data = await response.json();
-
-    if (response.ok) {
-      alert('Sign up successfully');
-      console.log('Created data: ', data.user.user_id);
+    if (!response.ok) {
+      if(data.error){
+        emailError.textContent = data.error.email || '';
+        usernameError.textContent = data.error.username || '';
+        passwordError.textContent = data.error.password || '';
+      }
     } else {
-      alert(
-        'Sign up failed during registration: ' +
-          (data.error || 'Unknown error'),
-      );
+      alert('Sign up successful');
+      console.log('Created data: ', data.user.user_id);
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error during signUp: ', error);
   }
 });
-//-------------------------- END OF SIGN UP FORM --------------------------
-
-//-------------------------- LOGIN  --------------------------
-
-
-//-------------------------- END OF LOGIN  --------------------------

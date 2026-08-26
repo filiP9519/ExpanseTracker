@@ -9,10 +9,21 @@ const pool = new Pool({
     port: 5432,
 })
 
+const validateUser = async (username) =>  {
+    const query = 'SELECT username FROM users WHERE username = $1';
+    const values = [username];
+
+    const rows = await pool.query(query, values);
+    return rows.rowCount > 0;
+}
+
 //(ekvivalent User.create())
 const User = {
     async create(email, password, username){
-
+        const userExists = await validateUser(username);
+        if (userExists){
+            throw Error('user already exists');
+        }
         //zasifrovanie hesla
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -23,10 +34,17 @@ const User = {
         return result.rows[0]; // Vráti vytvoreného používateľa
     },
     async login(username, password){
-        const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
-        const values = [username, password];
+        const query = 'SELECT * FROM users WHERE username = $1';
+        const values = [username];
         const result = await pool.query(query,values);
-        return result.rows[0];
+        if(result){
+            const auth = await bcrypt.compare(password, result.rows[0].password);
+            if (auth){
+                return result.rows[0];
+            }
+            throw Error('Incorrect password!');
+        }
+        throw Error('Incorrect username!');
     }
 }
 
