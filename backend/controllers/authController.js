@@ -1,12 +1,14 @@
+require('dotenv').config();
 const path = require('path');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+
+
 //handle errors
 const handleErrors = (err) => {
     console.log(err.message, err.code);
     let errors = {email: '', password: '', username: ''};
 
-    if (err.message == '')
     if (err.code === '23505'){
         if (err.constraint && err.constraint.includes('email')){
             errors.email = 'That email is already registered';
@@ -16,13 +18,19 @@ const handleErrors = (err) => {
     if (err.message === 'user already exists'){
         errors.username = 'Username is already registered';
     }
+    if (err.message === 'Incorrect username!') {
+        errors.username = 'This username is not registered';
+    }
+    if (err.message === 'Incorrect password!') {
+        errors.password = 'Incorrect password';
+        }
     return errors;//console.log(err.message, err.code);
 }
 
 const maxAge = 86400000
 
 const createToken = (id) => {
-    return jwt.sign({ id }, 'bolavevajca378', {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: maxAge
 
     })
@@ -52,7 +60,7 @@ module.exports.signup_post = async (req, res) => {
         const user = await User.create(email, password, username);
         const token = createToken(user.user_id);
         res.cookie('jwt', token, {httpOnly : true, maxAge : maxAge});
-        res.status(201).json({user : user});
+        res.status(200).json({user : user});
     } catch (error) {
         const errors = handleErrors(error);
 
@@ -65,8 +73,12 @@ module.exports.login_post = async (req, res) => {
     const{username, password} = req.body;
     try{
         const user = await User.login(username, password);
-        res.status(201).json({user : user.user_id});
-    } catch (e){
-        res.status(400).json({});
+        const token = createToken(user.user_id);
+
+        res.cookie('jwt', token, {httpOnly : true, maxAge : maxAge});
+        res.status(200).json({user : user.user_id});
+    } catch (error){
+        const errors = handleErrors(error);
+        res.status(400).json({error : errors});
     }
 }

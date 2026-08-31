@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
@@ -15,27 +16,23 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Konfigurácia databázy
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    port: 5432,
-    password: 'admin',
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    password: process.env.DB_PASSWORD,
 });
 
 // API cesty
+/*
 app.post('/api/save', async (req, res) => {
     const { stock_name, stock_price_atm, stock_amount } = req.body;
     await pool.query('INSERT INTO transaction (stock_name, stock_price_atm, stock_amount) VALUES ($1, $2, $3)',
         [stock_name, stock_price_atm, stock_amount]);
     res.send("Data saved!");
 });
-
+*/
 app.use(authRoutes);
-
-// KONTROLNÝ ENDPOINT - na overenie, či server žije
-app.get('/ping', (req, res) => {
-    res.send('Server zije a odpoveda!');
-});
 
 // Opravená cesta pre index.html
 app.get('/', (req, res) => {
@@ -44,5 +41,5 @@ app.get('/', (req, res) => {
 
 // Spustenie servera
 app.listen(4444, () => {
-    console.log('Server started on port 3000');
+    console.log('Server started on port 4444');
 });

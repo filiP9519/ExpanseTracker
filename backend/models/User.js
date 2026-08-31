@@ -37,7 +37,7 @@ const User = {
         const query = 'SELECT * FROM users WHERE username = $1';
         const values = [username];
         const result = await pool.query(query,values);
-        if(result){
+        if(result.rowCount > 0){
             const auth = await bcrypt.compare(password, result.rows[0].password);
             if (auth){
                 return result.rows[0];
